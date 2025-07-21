@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Insider Threat Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Insider Threat Dashboard</h1>
+
+        {% for entry in data %}
+        <div class="card">
+            <div class="card-header">
+                <span class="tag">{{ entry.event_type }}</span>
+                <span class="timestamp">{{ entry.timestamp or entry.EventTime }}</span>
+            </div>
+            <div class="card-body">
+                <p><strong>Source IP:</strong> {{ entry.SourceAddress }}</p>
+                
+                {% if entry.event_type == 'USB_INSERT' %}
+                    <p><strong>Mount Point:</strong> {{ entry.ConnectionStatus }}</p>
+                    <p><strong>Access:</strong> {{ entry.AccessOutcome }}</p>
+
+                {% elif entry.event_type == 'MALICIOUS_CONNECTION' %}
+                    <p><strong>Destination IP:</strong> {{ entry.DestinationIp }}</p>
+                    <p><strong>Status:</strong> {{ entry.ConnectionStatus or "malicious" }}</p>
+                    <p><strong>Message:</strong> {{ entry.Message }}</p>
+
+                {% elif entry.event_type == 'FAILED_LOGIN' %}
+                    <p><strong>Event ID:</strong> {{ entry.EventID }}</p>
+                    <p><strong>Message:</strong> {{ entry.Message }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
